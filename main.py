@@ -18,20 +18,10 @@ def main():
             if selection == 1:
                 select_command = "SELECT * FROM movies"
                 cursor.execute(select_command)
-                print(cursor.fetchone())
+                for entry in cursor.fetchall():
+                    print(entry)                
             elif selection == 2:
-                movie_title = input("Title: ")
-                director = input("Director: ")
-                year_released = input("Release Year: ")
-                description = input("Description: ")
-                insert_command = f"""INSERT INTO movies(title, director, year, description) 
-                                    VALUES('{movie_title}', '{director}', '{year_released}', '{description}');"""
-                try:
-                    if cursor.execute(insert_command):
-                        print("Movie added succesfully!")
-                    conn.commit()
-                except Error as e:
-                    print(e)
+                add_movie(cursor, conn)
             elif selection == 3:
                 exit()
             else:
@@ -39,6 +29,21 @@ def main():
     else:
         print("Cannot create the db connection.")
 
+
+def add_movie(cursor, conn):
+    movie_title = input("Title: ")
+    director = input("Director: ")
+    year_released = input("Release Year: ")
+    description = input("Description: ")
+    insert_command = f"""INSERT INTO movies(title, director, year, description) 
+                        VALUES('{movie_title}', '{director}', '{year_released}', '{description}');"""
+    try:
+        if cursor.execute(insert_command):
+            print("Movie added succesfully!")
+        conn.commit()
+    except Error as e:
+        print(e)
+    
 
 if __name__ == '__main__':
     main()
